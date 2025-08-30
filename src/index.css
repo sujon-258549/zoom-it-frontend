@@ -6,7 +6,7 @@
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  background-color: #f9f8f8d2;
+  background-color: #f1ededd2;
 
   --radius: 0.625rem;
 
@@ -22,7 +22,7 @@
 
   --popover-foreground: oklch(0.145 0 0);
 
-  --primary: oklch(48.033% 0.18738 28.153);
+  --primary: lch(41.98% 82.93 38.19);
 
   --primary-foreground: oklch(0.985 0 0);
 
