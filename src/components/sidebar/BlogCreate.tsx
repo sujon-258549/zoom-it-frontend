@@ -12,10 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useCreateBlogMutation } from "@/redux/fetures/auth/authApi";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const BlogCreate = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+
   const form = useForm({
     defaultValues: {
       title: "",
@@ -23,20 +26,39 @@ const BlogCreate = () => {
       image: null,
     },
   });
-
+  const navigate = useNavigate()
   interface FormData {
     title: string;
     description: string;
     image: FileList | null;
   }
+  const [createBlog] = useCreateBlogMutation()
+  const onSubmit = async (data: FormData) => {
+    console.log(data)
+    const reData = {
+      content: data.description,
+      title: data.title
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    // Handle blog creation logic here
-    // You would typically send this data to your backend API
+    }
+    try {
+      const toastId = toast.loading("creating blog......", { duration: 2000 });
+      const res = await createBlog(reData).unwrap();
+
+      if (res.success) {
+        toast.success(res.message || "Registration successful!", {
+          id: toastId,
+          duration: 2000,
+        });
+        navigate('/dashboard/blog')
+      } else {
+        throw new Error(res.message || "Registration failed");
+      }
+    } catch (error: any) {
+      console.error("Registration error:", error);
+    }
   };
 
-  const handleImageChange = (e : any) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -53,8 +75,8 @@ const BlogCreate = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div 
-        style={{boxShadow: "1px 1px 10px"}} 
+      <div
+        style={{ boxShadow: "1px 1px 10px" }}
         className="max-w-2xl w-full space-y-8 bg-white p-8 rounded-lg shadow-md"
       >
         <div>
@@ -133,9 +155,9 @@ const BlogCreate = () => {
                       {imagePreview && (
                         <div className="mt-4">
                           <p className="text-sm font-medium mb-2">Image Preview:</p>
-                          <img 
-                            src={imagePreview} 
-                            alt="Preview" 
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
                             className="max-h-60 rounded-md object-contain"
                           />
                         </div>

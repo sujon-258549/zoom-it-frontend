@@ -1,10 +1,16 @@
-import Login from "../login/Login";
+import { Outlet } from "react-router-dom";
+import Navbar from "../navbarAndFooter/Navbar";
+import FooterSection from "../navbarAndFooter/Footer";
 
 
 const Main = () => {
     return (
         <div>
-            <Login/>
+            <Navbar />
+            <div className="min-h-screen">
+                <Outlet />
+                <FooterSection/>
+            </div>
         </div>
     );
 };

@@ -12,7 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-
+import { toast } from 'sonner';
+import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "@/redux/fetures/auth/authApi";
 const SignUp = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -35,8 +37,11 @@ const SignUp = () => {
         password: string;
         confirmPassword: string;
     }
+    const navigate = useNavigate()
+    // Get the mutation function from the hook
+    const [registerUser] = useRegisterUserMutation();
 
-    const onSubmit = (data: FormData) => {
+    const onSubmit = async (data: FormData) => {
         console.log(data);
         // Handle sign up logic here
         if (data.password !== data.confirmPassword) {
@@ -46,14 +51,62 @@ const SignUp = () => {
             });
             return;
         }
-        // Proceed with registration
+        const toastId = toast.loading("Registering...", { duration: 2000 });
+
+        try {
+
+            const registrationData = {
+                name: data.firstName + (data.lastName ? ' ' + data.lastName : ''),
+                email: data.email,
+                password: data.password, // You should hash this before storing
+                phoneNumber: data.phoneNumber,
+                role: "user", // Default role for new registrations
+                isBlocked: false // New users are not blocked by default
+            };
+
+            const res = await registerUser(registrationData).unwrap();
+
+            if (res.success) {
+                toast.success(res.message || "Registration successful!", {
+                    id: toastId,
+                    duration: 2000,
+                });
+                setTimeout(() => navigate("/login"), 2000); // Redirect after success
+            } else {
+                throw new Error(res.message || "Registration failed");
+            }
+        } catch (error: any) {
+            console.error("Registration error:", error);
+
+            // Handle MongoDB duplicate key error (email already exists)
+            if (error?.code === 11000 || error?.err?.code === 11000) {
+                toast.error("Email already registered. Please use a different email.", {
+                    id: toastId,
+                    duration: 4000,
+                });
+            }
+            // Handle API error response
+            else if (error?.data?.message) {
+                toast.error(error.data.message, { id: toastId, duration: 4000 });
+            }
+            // Generic fallback
+            else {
+                toast.error(
+                    error.message || "Something went wrong. Please try again.",
+                    {
+                        id: toastId,
+                        duration: 4000,
+                    }
+                );
+            }
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center py-12 px-4 border border-black sm:px-6 lg:px-8">
-            <div style={{boxShadow:"1px 1px 10px"}} className="max-w-lg shadow-cyan-900 w-full space-y-8 bg-white p-8 rounded-sm shadow-md">
+            <div style={{ boxShadow: "1px 1px 10px" }} className="max-w-lg shadow-cyan-900 w-full space-y-8 bg-white p-8 rounded-sm shadow-md">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-[#c70e0e]">
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-cyan-800na">
                         Create your account
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
@@ -88,7 +141,7 @@ const SignUp = () => {
                                     </FormItem>
                                 )}
                             />
-                            
+
                             <FormField
                                 control={form.control}
                                 name="lastName"

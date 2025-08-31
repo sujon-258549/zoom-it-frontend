@@ -12,32 +12,78 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
+import { useLoginMutation } from "@/redux/fetures/auth/authApi";
+import { verifyToken } from "../utility/varefyToken";
+import { useAppDispatch } from "@/redux/fetures/hooks";
+import { setUser } from "@/redux/fetures/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const form = useForm({
         defaultValues: {
-            username: "",
-            password: "",
+            username: "johndoe@example.com",
+            password: "hashed_password_here",
         },
     });
-
+    const dispatch = useAppDispatch()
     interface FormData {
         username: string,
         password: string
     }
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
-        // Handle login logic here
+    const [userLogin] = useLoginMutation()
+    const navigate = useNavigate()
+    const onSubmit = async (data: FormData) => {
+        const toastId = toast.loading("Logging in...", { duration: 2000 });
+        console.log(data)
+        try {
+            const repelsData = {
+                email: data?.username,
+                password: data?.password
+            }
+            const res = await userLogin(repelsData).unwrap();
+
+            console.log(res)
+
+            if (!res.data?.token) {
+                throw new Error(
+                    res.data?.message || "Login failed. No access token received."
+                );
+            }
+
+            const userInfo = verifyToken(res.data.token);
+
+            if (!userInfo) {
+                throw new Error("Invalid token. Please try again.");
+            }
+
+            dispatch(
+                setUser({
+                    user: { userInfo },
+                    token: res.data.token,
+                })
+            );
+            sessionStorage.setItem("accessToken", res.data.token);
+            toast.success("Login successful!", { id: toastId });
+            navigate("/dashboard", { replace: true }); // Prevents going back to login
+        } catch (error: any) {
+            console.error("Login failed:", error);
+            const errorMessage =
+                error?.data?.message ||
+                error.message ||
+                "Login failed. Please try again.";
+            toast.error(errorMessage, { id: toastId });
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center py-12 px-4 border border-black sm:px-6 lg:px-8">
 
-            <div  style={{boxShadow:"1px 1px 10px"}}  className="max-w-md shadow-cyan-900 w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+            <div style={{ boxShadow: "1px 1px 10px" }} className="max-w-md shadow-cyan-900 w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-[#c70e0e]">
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-cyan-800">
                         Sign in to your account
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
