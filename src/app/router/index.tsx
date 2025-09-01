@@ -3,6 +3,7 @@ import Home from "@/components/home/Home";
 import Login from "@/components/login/Login";
 import Main from "@/components/main/Main";
 import SignUp from "@/components/register/Registation";
+import Shipping from "@/components/shipping/Shipping";
 import BlogCreate from "@/components/sidebar/BlogCreate";
 import Dashboard from "@/components/sidebar/Dashboard";
 import MainSidebar from "@/components/sidebar/MainSidebar";
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
             {
                 path: '/all-product',
                 element: <AllProduct />
+            },
+            {
+                path: '/shipping',
+                element: <Shipping />
             }
         ]
         ,

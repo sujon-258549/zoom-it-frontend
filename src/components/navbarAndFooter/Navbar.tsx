@@ -12,7 +12,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { LogIn } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { FaShoppingBag } from 'react-icons/fa'
+import { Link, NavLink } from 'react-router-dom'
 
 // Navigation links
 const navigationLinks = [
@@ -89,6 +90,7 @@ export default function Navbar() {
 
                     {/* Right: Auth Buttons */}
                     <div className="flex items-center gap-2">
+                       <Link to={'/shipping'}> <button className='cursor-pointer mt-1'><FaShoppingBag  className='text-2xl  text-white mr-3'/></button></Link>
                         <Button asChild size="sm" className="text-sm">
                             <a href="/login"> Login <LogIn/></a>
                         </Button>

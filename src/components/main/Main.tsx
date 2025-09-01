@@ -9,8 +9,8 @@ const Main = () => {
             <Navbar />
             <div className="min-h-screen">
                 <Outlet />
-                <FooterSection/>
             </div>
+            <FooterSection />
         </div>
     );
 };
