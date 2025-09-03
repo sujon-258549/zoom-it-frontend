@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
     Form,
@@ -15,9 +15,12 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "@/redux/fetures/auth/authApi";
+import { uploadProfileImage } from "../utility/imageUpload";
 const SignUp = () => {
     const [showPassword, setShowPassword] = React.useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+    const [currentFile, setCurrentFile] = useState<File | undefined>(undefined)
     const form = useForm({
         defaultValues: {
             firstName: "",
@@ -25,24 +28,42 @@ const SignUp = () => {
             email: "",
             phoneNumber: "",
             password: "",
+            profileImage: "",
             confirmPassword: "",
         },
     });
-
+    const {
+        formState: { isSubmitting },
+    } = form;
     interface FormData {
         firstName: string;
         lastName: string;
         email: string;
         phoneNumber: string;
         password: string;
+        profileImage: string;
         confirmPassword: string;
     }
     const navigate = useNavigate()
     // Get the mutation function from the hook
     const [registerUser] = useRegisterUserMutation();
-
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        setCurrentFile(file)
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === "string" || reader.result === null) {
+                    setImagePreview(reader.result);
+                } else {
+                    setImagePreview(null);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     const onSubmit = async (data: FormData) => {
-        console.log(data);
+        console.log(currentFile);
         // Handle sign up logic here
         if (data.password !== data.confirmPassword) {
             form.setError("confirmPassword", {
@@ -52,16 +73,27 @@ const SignUp = () => {
             return;
         }
         const toastId = toast.loading("Registering...", { duration: 2000 });
+        // let imageUrl = "";
+        // if (profileImage) {
+        //     imageUrl = await uploadImageToCloudinary(profileImage);
+        // }
+
+        let imageUrl = "";
+        if (currentFile) {
+            imageUrl = await uploadProfileImage(currentFile);
+        }
+
 
         try {
 
             const registrationData = {
-                name: data.firstName + (data.lastName ? ' ' + data.lastName : ''),
+                name: `${data.firstName} ${data.lastName || ""}`.trim(),
                 email: data.email,
-                password: data.password, // You should hash this before storing
+                password: data.password,
                 phoneNumber: data.phoneNumber,
-                role: "user", // Default role for new registrations
-                isBlocked: false // New users are not blocked by default
+                profileImage: imageUrl,
+                role: "user",
+                isBlocked: false,
             };
 
             const res = await registerUser(registrationData).unwrap();
@@ -106,7 +138,7 @@ const SignUp = () => {
         <div className="min-h-screen flex items-center justify-center py-12 px-4 border border-black sm:px-6 lg:px-8">
             <div style={{ boxShadow: "1px 1px 10px" }} className="max-w-lg shadow-cyan-900 w-full space-y-8 bg-white p-8 rounded-sm shadow-md">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-cyan-800na">
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-cyan-800">
                         Create your account
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
@@ -276,6 +308,39 @@ const SignUp = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="profileImage"
+                            render={() => (
+                                <FormItem>
+                                    <FormLabel>Profile Image</FormLabel>
+                                    <FormControl>
+                                        <div className="flex flex-col items-start">
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageChange}
+                                                className="rounded-md"
+                                            />
+                                            {imagePreview && (
+                                                <div className="mt-4">
+                                                    <p className="text-sm font-medium mb-2">Image Preview:</p>
+                                                    <img
+                                                        src={imagePreview}
+                                                        alt="Preview"
+                                                        className="max-h-60 w-full rounded-md object-contain"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </FormControl>
+                                    <FormDescription>
+                                        A nice profile image makes your account more personal.
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
                         <div className="flex items-center">
                             <input
@@ -295,9 +360,9 @@ const SignUp = () => {
 
                         <Button
                             type="submit"
-                            className="w-full text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                            className="w-full cursor-pointer text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
                         >
-                            Create Account
+                            {isSubmitting ? "Loading......" : "Sign up"}
                         </Button>
                     </form>
                 </Form>

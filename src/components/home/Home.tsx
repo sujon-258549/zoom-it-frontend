@@ -1,5 +1,5 @@
 import Hero from "./Hero";
-import ProductManagementCards from "./HomeCard";
+import ProductManagementCards from "./Product";
 
 
 const Home = () => {

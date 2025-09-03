@@ -10,6 +10,8 @@ const authApi = baseApi.injectEndpoints({
                 body: userInfo,
             }),
         }),
+
+
         login: builder.mutation({
             query: (userInfo) => ({
                 url: "/auth/login",
@@ -33,6 +35,53 @@ const authApi = baseApi.injectEndpoints({
                 return response.data;
             },
         }),
+        getMe: builder.query({
+            query: () => ({
+                url: "/me",
+                method: "GET",
+            }),
+            transformResponse: (response: any) => {
+                return response.data;
+            },
+        }),
+
+        // Category
+        createCategory: builder.mutation({
+            query: (userInfo) => ({
+                url: "/category",
+                method: "POST",
+                body: userInfo,
+            }),
+        }),
+        getAllCategory: builder.query({
+            query: () => ({
+                url: "/category",
+                method: "GET",
+            }),
+            transformResponse: (response: any) => {
+                return response.data;
+            },
+        }),
+
+        // Product
+        createProduct: builder.mutation({
+            query: (userInfo) => ({
+                url: "/products",
+                method: "POST",
+                body: userInfo,
+            }),
+        }),
+
+        getAllProduct: builder.query({
+            query: () => ({
+                url: "/products",
+                method: "GET",
+            }),
+            transformResponse: (response: any) => {
+                return response;
+            },
+        }),
+
     }),
 });
 
@@ -40,5 +89,10 @@ export const {
     useRegisterUserMutation,
     useLoginMutation,
     useCreateBlogMutation,
-    useAllBlogQuery
+    useAllBlogQuery,
+    useGetMeQuery,
+    useCreateCategoryMutation,
+    useGetAllCategoryQuery,
+    useCreateProductMutation,
+    useGetAllProductQuery
 } = authApi;

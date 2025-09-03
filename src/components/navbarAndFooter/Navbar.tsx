@@ -11,9 +11,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { LogIn } from 'lucide-react'
 import { FaShoppingBag } from 'react-icons/fa'
 import { Link, NavLink } from 'react-router-dom'
+import MotionButton from '../motionButton'
+import { useAppSelector } from '@/redux/fetures/hooks'
+import { userCurrentUser } from '@/redux/fetures/auth/authSlice'
+import DropdownMenu from '../navbarAndFooter/Dropdown'
 
 // Navigation links
 const navigationLinks = [
@@ -22,8 +25,20 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+
+    // Define the expected user type
+    interface UserType {
+        userInfo?: {
+            email?: string;
+            // add other properties as needed
+        };
+    }
+
+    const user = useAppSelector(userCurrentUser) as UserType;
+    const email = user?.userInfo?.email
+    console.log(email)
     return (
-        <section className='border-b px-4 md:px-8 bg-cyan-900 '>
+        <section className='border-b px-4 sticky top-0 z-40 md:px-8 bg-cyan-900 '>
 
             <header className="max-w-5xl mx-auto">
                 <div className="flex h-16 items-center justify-between">
@@ -90,10 +105,10 @@ export default function Navbar() {
 
                     {/* Right: Auth Buttons */}
                     <div className="flex items-center gap-2">
-                       <Link to={'/shipping'}> <button className='cursor-pointer mt-1'><FaShoppingBag  className='text-2xl  text-white mr-3'/></button></Link>
-                        <Button asChild size="sm" className="text-sm">
-                            <a href="/login"> Login <LogIn/></a>
-                        </Button>
+                        <Link to={'/shipping'}> <button className='cursor-pointer mt-1'><FaShoppingBag className='text-2xl  text-white mr-3' /></button></Link>
+                        {
+                            email ? <DropdownMenu/> : <Link to={'/login'}><MotionButton text="Login"></MotionButton> </Link>
+                        }
                     </div>
                 </div>
             </header>

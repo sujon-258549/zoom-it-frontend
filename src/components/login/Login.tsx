@@ -18,6 +18,7 @@ import { verifyToken } from "../utility/varefyToken";
 import { useAppDispatch } from "@/redux/fetures/hooks";
 import { setUser } from "@/redux/fetures/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import Loading from "../common/loding/Loading";
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -32,7 +33,7 @@ const Login = () => {
         username: string,
         password: string
     }
-
+    const { formState: { isSubmitting } } = form;
     const [userLogin] = useLoginMutation()
     const navigate = useNavigate()
     const onSubmit = async (data: FormData) => {
@@ -183,9 +184,9 @@ const Login = () => {
 
                         <Button
                             type="submit"
-                            className="w-full  text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                            className="w-full cursor-pointer text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
                         >
-                            Sign in
+                            {isSubmitting ? <Loading/> : "Sign In"}
                         </Button>
                     </form>
                 </Form>
