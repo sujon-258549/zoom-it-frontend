@@ -1,15 +1,16 @@
 import AllProduct from "@/components/allProduct/AllProduct";
 import ProductDetails from "@/components/allProduct/ProductDetails";
 import Home from "@/components/home/Home";
-import Login from "@/components/login/Login";
+import LoginForm from "@/components/login/LoginForm";
+// import LoginForm from "../../components/login/Login";
 import Main from "@/components/main/Main";
 import SignUp from "@/components/register/Registation";
 import Shipping from "@/components/shipping/Shipping";
 import CreateCategory from "@/components/sidebar/CreateCategory";
-import Dashboard from "@/components/sidebar/Dashboard";
+import Dashboard from "@/components/sidebar/dashboard/Dashboard";
 import MainSidebar from "@/components/sidebar/MainSidebar";
 import ProductCreate from "@/components/sidebar/ProductCreate";
-import StackCard from "@/components/sidebar/StackCard";
+import Profile from "@/components/sidebar/Profile";
 import { createBrowserRouter } from "react-router-dom";
 
 
@@ -31,7 +32,7 @@ export const router = createBrowserRouter([
                 element: <Shipping />
             },
             {
-                path: '/product-details',
+                path: '/product/:id',
                 element: <ProductDetails />
             }
         ]
@@ -40,7 +41,8 @@ export const router = createBrowserRouter([
     },
     {
         path: '/login',
-        element: <Login />
+        element: <LoginForm
+         />
     },
     {
         path: '/signup',
@@ -61,6 +63,10 @@ export const router = createBrowserRouter([
             {
                 path: "/dashboard/create-product",
                 element: <ProductCreate />
+            },
+            {
+                path: "/dashboard/profile",
+                element: <Profile />
             }
         ]
 

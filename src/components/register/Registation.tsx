@@ -16,12 +16,15 @@ import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "@/redux/fetures/auth/authApi";
 import { uploadProfileImage } from "../utility/imageUpload";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "./register";
 const SignUp = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
     const [currentFile, setCurrentFile] = useState<File | undefined>(undefined)
     const form = useForm({
+        resolver: zodResolver(signUpSchema),
         defaultValues: {
             firstName: "",
             lastName: "",
@@ -153,6 +156,7 @@ const SignUp = () => {
                 </div>
 
                 <Form {...form}>
+                    {/* @ts-expect-error */}
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <div className="flex space-x-4">
                             <FormField
@@ -163,7 +167,7 @@ const SignUp = () => {
                                         <FormLabel>First Name</FormLabel>
                                         <FormControl>
                                             <Input
-                                                required
+                                            
                                                 placeholder="Enter your first name"
                                                 {...field}
                                                 className="rounded-md"
@@ -182,7 +186,7 @@ const SignUp = () => {
                                         <FormLabel>Last Name</FormLabel>
                                         <FormControl>
                                             <Input
-                                                required
+                                            
                                                 placeholder="Enter your last name"
                                                 {...field}
                                                 className="rounded-md"
@@ -203,7 +207,8 @@ const SignUp = () => {
                                     <FormControl>
                                         <Input
                                             type="email"
-                                            required
+                                        
+                                            
                                             placeholder="Enter your email address"
                                             {...field}
                                             className="rounded-md"
@@ -226,7 +231,8 @@ const SignUp = () => {
                                     <FormControl>
                                         <Input
                                             type="tel"
-                                            required
+                                           
+                                            
                                             placeholder="Enter your phone number"
                                             {...field}
                                             className="rounded-md"
@@ -249,7 +255,8 @@ const SignUp = () => {
                                     <FormControl>
                                         <div className="relative">
                                             <Input
-                                                required
+                                               
+                                               
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Create a password"
                                                 {...field}
@@ -285,7 +292,8 @@ const SignUp = () => {
                                     <FormControl>
                                         <div className="relative">
                                             <Input
-                                                required
+                                         
+                                         
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 placeholder="Confirm your password"
                                                 {...field}
@@ -347,7 +355,7 @@ const SignUp = () => {
                                 id="terms"
                                 name="terms"
                                 type="checkbox"
-                                required
+                            
                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                             />
                             <label

@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { RxCross2, RxChevronLeft, RxChevronRight } from "react-icons/rx";
-import { useGetAllProductQuery } from "@/redux/fetures/auth/authApi";
 import type { TProduct } from "../sidebar/ProductCreate";
-import LoadingPage from "../common/loding/LoadingPage";
-import { AlignLeft } from "lucide-react";
+
+
 import { Link } from "react-router-dom";
 
-const ProductManagementCards = () => {
-  const { data: product, isLoading } = useGetAllProductQuery('');
-  const products = product?.data || [];
+const RelevantProduct = ({product}:{product: TProduct[]}) => {
+  const products: TProduct[] = product || [];
 
   // State to track current photo index for each product
   const [currentPhotoIndexes, setCurrentPhotoIndexes] = useState<Record<string, number>>({});
@@ -49,19 +47,16 @@ const ProductManagementCards = () => {
     });
   };
   console.log(products)
-  if (isLoading) {
-    return <LoadingPage />;
-  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-cyan-800 mb-3 tracking-tight">
-            Product Management
+            Relevant Product
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore our products with interactive cards showcasing details, pricing, and availability.
+            Explore relevant products with interactive cards showcasing details, pricing, and availability.
           </p>
         </div>
 
@@ -162,13 +157,13 @@ const ProductManagementCards = () => {
                       <span className="text-2xl font-bold text-cyan-700">
                         ${((product.discount || 0)).toFixed(2)}
                       </span>
-                     
+                      {product.discount > 0 && (
                         <>
                           <span className="text-gray-400 line-through">
                             ${product.price.toFixed(2)}
                           </span>
                         </>
-                
+                      )}
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -198,15 +193,15 @@ const ProductManagementCards = () => {
           </div>
         )}
       </div>
-      {products.length >= 8 &&
+      {/* {products.length >= 8 &&
 
         <div className="flex justify-center  mt-16">
           <Link to={'/all-product'}><Button className="text-white cursor-pointer
        text-center"><AlignLeft className="mr-4" /> View All</Button></Link>
         </div>
-      }
+      } */}
     </div>
   );
 };
 
-export default ProductManagementCards;
+export default RelevantProduct;

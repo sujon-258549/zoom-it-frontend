@@ -33,6 +33,8 @@ import {
 
 // Utilities
 import { uploadProfileImage } from "../utility/imageUpload";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Types
 interface CategoryFormValues {
@@ -55,6 +57,11 @@ const CreateCategory: React.FC = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [currentFile, setCurrentFile] = useState<File | undefined>(undefined);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const categorySchema = z.object({
+    name: z.string().min(1, "name is requeued"),
+    slug: z.string().min(1, "slug is requeued"),
+  });
+
 
   // Hooks
   const navigate = useNavigate();
@@ -63,6 +70,7 @@ const CreateCategory: React.FC = () => {
 
   // Form Setup
   const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
       slug: "",
@@ -153,9 +161,9 @@ const CreateCategory: React.FC = () => {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className=" text-white">
+            <Button className=" text-white cursor-pointer">
 
-              <BiSolidCategory className="mr-2" /> Add Category
+              <BiSolidCategory className="mr-2 " /> Add Category
             </Button>
           </DialogTrigger>
 
@@ -258,7 +266,7 @@ const CreateCategory: React.FC = () => {
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full text-white cursor-pointer"
                   disabled={isCreating}
                 >
                   {isCreating ? <Loading /> : "Create Category"}

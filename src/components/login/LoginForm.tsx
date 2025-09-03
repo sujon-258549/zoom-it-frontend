@@ -8,31 +8,36 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "../ui/form";
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { useLoginMutation } from "@/redux/fetures/auth/authApi";
+import { useLoginMutation } from "../../redux/fetures/auth/authApi";
 import { verifyToken } from "../utility/varefyToken";
-import { useAppDispatch } from "@/redux/fetures/hooks";
-import { setUser } from "@/redux/fetures/auth/authSlice";
+import { useAppDispatch } from "../../redux/fetures/hooks";
+import { setUser } from "../../redux/fetures/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import Loading from "../common/loding/Loading";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "./login";
 
-const Login = () => {
+
+const LoginForm = () => {
     const [showPassword, setShowPassword] = React.useState(false);
     const form = useForm({
+        resolver: zodResolver(loginSchema),
         defaultValues: {
-            username: "johndoe@example.com",
+            email: "johndoe@example.com",
             password: "hashed_password_here",
         },
     });
     const dispatch = useAppDispatch()
     interface FormData {
-        username: string,
+        email: string,
         password: string
     }
+
     const { formState: { isSubmitting } } = form;
     const [userLogin] = useLoginMutation()
     const navigate = useNavigate()
@@ -41,7 +46,7 @@ const Login = () => {
         console.log(data)
         try {
             const repelsData = {
-                email: data?.username,
+                email: data?.email,
                 password: data?.password
             }
             const res = await userLogin(repelsData).unwrap();
@@ -102,12 +107,12 @@ const Login = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Username or Email</FormLabel>
                                     <FormControl>
-                                        <Input type="email" required
+                                        <input type="email"
                                             placeholder="Enter your username or email"
                                             {...field}
                                             className="rounded-md"
@@ -129,7 +134,7 @@ const Login = () => {
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <div className="relative">
-                                            <Input required
+                                            <Input 
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your password"
                                                 {...field}
@@ -186,7 +191,7 @@ const Login = () => {
                             type="submit"
                             className="w-full cursor-pointer text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
                         >
-                            {isSubmitting ? <Loading/> : "Sign In"}
+                            {isSubmitting ? <Loading /> : "Sign In"}
                         </Button>
                     </form>
                 </Form>
@@ -197,4 +202,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default LoginForm;

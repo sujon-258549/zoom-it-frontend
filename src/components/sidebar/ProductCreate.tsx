@@ -101,11 +101,29 @@ const ProductCreate = () => {
     ;
 
   const onSubmit = async (data: any) => {
+    // console.log("stockStatus",data?.stockStatus)
     if (files.length === 0) {
       toast.error("Please upload at least one product image");
       return;
     }
+    if (data.stockStatus === undefined) {
+      toast.error("Please select stock status");
+      return;
+    }
+    console.log(data.status)
+    if (data.status === undefined) {
+      toast.error("Please select status");
+      return;
+    } 
+
+
+
     const categoryData = selected.map((s: any) => s.value)
+
+    if (categoryData.length === 0) {
+      toast.error("Please select category");
+      return;
+    }
 
 
     try {
@@ -120,7 +138,7 @@ const ProductCreate = () => {
       }
       console.log(data)
 
-      const discountedPrice = (Number(data.price) * Number(data.discount)) / 100
+      const discountedPrice = (Number(data.price) * Number(data.discount || 0)) / 100
       const discountAmount = (Number(data.price) - discountedPrice)
 
       const productData = {

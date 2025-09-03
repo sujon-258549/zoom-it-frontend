@@ -44,7 +44,7 @@ const UserDropdown = () => {
         sideOffset={5}
       >
         {/* Header with user info */}
-        <div className="p-4 bg-gradient-to-r from-cyan-900/30 to-cyan-900/30 border-b border-gray-700">
+        <div className="p-4  bg-gradient-to-r from-cyan-900/30 to-cyan-900/30 border-b border-gray-700">
           <DropdownMenuLabel className="text-white font-normal p-0">
             <div className="flex items-center gap-3">
               <Avatar className="h-12 w-12 border-2 border-white/20">
@@ -71,21 +71,26 @@ const UserDropdown = () => {
             </DropdownMenuItem>
 
           </Link>
-          <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-all focus:bg-indigo-900/50 focus:text-white">
-            <div className="h-7 w-7 rounded-full bg-cyan-400 flex items-center justify-center">
-              <i className="fa-regular fa-user text-red-400"></i>
-            </div>
-            <span>Profile</span>
-          </DropdownMenuItem>
+          <Link to={'/dashboard/profile'}>
+            <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-all focus:bg-indigo-900/50 focus:text-white">
+              <div className="h-7 w-7 rounded-full bg-cyan-400 flex items-center justify-center">
+                <i className="fa-regular fa-user text-red-400"></i>
+              </div>
+              <span>Profile</span>
+            </DropdownMenuItem>
+          </Link>
+          <Link to={'/shipping'}>
+            <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-all focus:bg-indigo-900/50 focus:text-white">
+              <div className="h-7 w-7 rounded-full bg-cyan-400 flex items-center justify-center">
+                <i className="fa-regular fa-user text-red-400"></i>
+              </div>
+              <span>Shipping</span>
+            </DropdownMenuItem>
+          </Link>
 
 
 
-          <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-all focus:bg-indigo-900/50 focus:text-white">
-            <div className="h-7 w-7 rounded-full bg-cyan-400 flex items-center justify-center">
-              <i className="fa-regular fa-users text-indigo-400"></i>
-            </div>
-            <span>Team</span>
-          </DropdownMenuItem>
+        
 
           <DropdownMenuItem className="flex items-center gap-3 p-2 rounded-lg cursor-pointer text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-all focus:bg-indigo-900/50 focus:text-white">
             <div className="h-7 w-7 rounded-full bg-cyan-400 flex items-center justify-center">

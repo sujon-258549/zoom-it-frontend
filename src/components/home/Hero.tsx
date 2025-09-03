@@ -26,21 +26,21 @@ const carBrands = [
     description:
       "BMW blends cutting-edge technology, luxury, and performance. Known for precision engineering, it offers an exhilarating driving experience with advanced features, sporty aesthetics, and innovative safety systems.",
     image:
-      "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "https://img.freepik.com/premium-photo/blank-white-tube-mockup-stylish-green-background-beauty-skin-care-packaging-3d-render_67155-17938.jpg",
   },
   {
     name: "Mercedes-Benz",
     description:
       "Mercedes-Benz is synonymous with elegance, innovation, and performance. Offering world-class luxury, top-tier safety, and cutting-edge technology, its vehicles provide an unparalleled driving experience.",
     image:
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "https://img.freepik.com/premium-photo/natural-beauty-products-with-green-leaves-flowers_954352-9971.jpg",
   },
   {
     name: "Audi",
     description:
       "Audi combines performance, luxury, and technology to create a seamless driving experience. With its signature Quattro all-wheel-drive, advanced infotainment systems, and sleek design.",
     image:
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2083&q=80",
+      "https://img.freepik.com/free-psd/black-friday-super-sale-web-banner-template_120329-3859.jpg?t=st=1756916694~exp=1756920294~hmac=ff466a40b8bba2bcd548bf120edd5bae298b34cd2fc99dd9961e923bc4bb515e&w=2000",
   },
   {
     name: "Lamborghini",

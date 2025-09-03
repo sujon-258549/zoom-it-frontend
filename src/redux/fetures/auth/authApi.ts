@@ -1,3 +1,4 @@
+import type { TProductResponse } from "@/components/allProduct/type";
 import { baseApi } from "@/redux/api/baseApi";
 
 
@@ -73,8 +74,37 @@ const authApi = baseApi.injectEndpoints({
         }),
 
         getAllProduct: builder.query({
-            query: () => ({
-                url: "/products",
+            // query: () => ({
+            //     url: "/products",
+            //     method: "GET",
+            // }),
+            // transformResponse: (response: any) => {
+            //     return response;
+            // },
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    args.forEach((element: { name: string; value: string }) => {
+                        params.append(element.name, element.value);
+                    });
+                }
+                return {
+                    url: "/products",
+                    method: "GET",
+                    params: params,
+                };
+            },
+            transformResponse: (response: TProductResponse) => {
+                return {
+                    data: response.data,
+                    meta: response.meta,
+                };
+            },
+            providesTags: ["product"],
+        }),
+        getSingleProduct: builder.query({
+            query: (id) => ({
+                url: `/products/${id}`,  //http://localhost:4000/api/products/68b7ea20941d34bc4441581a
                 method: "GET",
             }),
             transformResponse: (response: any) => {
@@ -82,6 +112,18 @@ const authApi = baseApi.injectEndpoints({
             },
         }),
 
+
+
+        // dashboard
+        adminDashboard: builder.query({
+            query: () => ({
+                url: "/admin",
+                method: "GET",
+            }),
+            transformResponse: (response: any) => {
+                return response.data;
+            },
+        }),
     }),
 });
 
@@ -94,5 +136,7 @@ export const {
     useCreateCategoryMutation,
     useGetAllCategoryQuery,
     useCreateProductMutation,
-    useGetAllProductQuery
+    useGetAllProductQuery,
+    useGetSingleProductQuery,
+    useAdminDashboardQuery
 } = authApi;
