@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FaHome } from "react-icons/fa";
 import { useAppSelector } from "@/redux/fetures/hooks";
 import { userCurrentUser } from "@/redux/fetures/auth/authSlice";
+import { List, User } from "lucide-react";
 
 const MainSidebar = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -37,6 +38,16 @@ const MainSidebar = () => {
                     icon: <FiFileText className="w-5 h-5" />,
                     label: "Create Product",
                     href: "/dashboard/create-product",
+                },
+                {
+                    icon: <List className="w-5 h-5" />,
+                    label: "All  Product M..",
+                    href: "/dashboard/all-product-table",
+                },
+                {
+                    icon: <User className="w-5 h-5" />,
+                    label: "All User",
+                    href: "/dashboard/all-user",
                 },
             ]
             : []),

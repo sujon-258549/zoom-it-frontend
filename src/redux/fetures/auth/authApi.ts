@@ -20,22 +20,7 @@ const authApi = baseApi.injectEndpoints({
                 body: userInfo,
             }),
         }),
-        createBlog: builder.mutation({
-            query: (userInfo) => ({
-                url: "/blogs",
-                method: "POST",
-                body: userInfo,
-            }),
-        }),
-        allBlog: builder.query({
-            query: () => ({
-                url: "/blogs",
-                method: "GET",
-            }),
-            transformResponse: (response: any) => {
-                return response.data;
-            },
-        }),
+
         getMe: builder.query({
             query: () => ({
                 url: "/me",
@@ -44,6 +29,19 @@ const authApi = baseApi.injectEndpoints({
             transformResponse: (response: any) => {
                 return response.data;
             },
+            providesTags: ["product"],
+
+        }),
+        allUser: builder.query({
+            query: () => ({
+                url: "/",
+                method: "GET",
+            }),
+            transformResponse: (response: any) => {
+                return response.data;
+            },
+            providesTags: ["product"],
+
         }),
 
         // Category
@@ -62,6 +60,8 @@ const authApi = baseApi.injectEndpoints({
             transformResponse: (response: any) => {
                 return response.data;
             },
+            providesTags: ["product"],
+
         }),
 
         // Product
@@ -110,6 +110,7 @@ const authApi = baseApi.injectEndpoints({
             transformResponse: (response: any) => {
                 return response;
             },
+            providesTags: ["product"],
         }),
 
         // order
@@ -133,6 +134,7 @@ const authApi = baseApi.injectEndpoints({
             transformResponse: (response: any) => {
                 return response.data;
             },
+            providesTags: ["product"],
         }),
     }),
 });
@@ -140,8 +142,6 @@ const authApi = baseApi.injectEndpoints({
 export const {
     useRegisterUserMutation,
     useLoginMutation,
-    useCreateBlogMutation,
-    useAllBlogQuery,
     useGetMeQuery,
     useCreateCategoryMutation,
     useGetAllCategoryQuery,
@@ -149,5 +149,6 @@ export const {
     useGetAllProductQuery,
     useGetSingleProductQuery,
     useAdminDashboardQuery,
-    useCreateOrderMutation
+    useCreateOrderMutation,
+    useAllUserQuery
 } = authApi;

@@ -1,6 +1,7 @@
-import { ComponentProps, useId } from "react";
+
 
 import { cn } from "@/lib/utils";
+import type { ComponentProps } from "react";
 
 interface DotPatternProps extends ComponentProps<"svg"> {
   width?: number;
@@ -23,6 +24,7 @@ export function DotPattern({
   className,
   ...props
 }: DotPatternProps) {
+  // @ts-expect-error
   const id = useId();
 
   return (

@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { uploadProfileImage } from "../utility/imageUpload";
-import { X, Upload, Plus, Check } from "lucide-react";
+import { X, Upload, Plus } from "lucide-react";
 import { MultiSelect } from "react-multi-select-component";
 import { useCreateProductMutation, useGetAllCategoryQuery } from "@/redux/fetures/auth/authApi";
 import LoadingPage from "../common/loding/LoadingPage";
@@ -30,11 +30,6 @@ export interface TProduct {
   __v: number;
 }
 
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-}
 
 const ProductCreate = () => {
   const [previews, setPreviews] = useState<string[]>([]);

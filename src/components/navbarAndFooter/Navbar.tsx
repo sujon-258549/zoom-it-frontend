@@ -40,7 +40,7 @@ export default function Navbar() {
     return (
         <section className='border-b px-4 sticky top-0 z-40 md:px-8 bg-cyan-900 '>
 
-            <header className="max-w-5xl mx-auto">
+            <header className="max-w-6xl mx-auto lg:px-3">
                 <div className="flex h-16 items-center justify-between">
                     {/* Left: Logo */}
                     <a href="/" className="flex items-center">

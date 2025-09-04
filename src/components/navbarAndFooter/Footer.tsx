@@ -6,10 +6,10 @@ const Footer = () => {
         <>
 
             <section className="bg-cyan-900 text-white">
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-6xl mx-auto px-4">
 
                     <footer className="">
-                        <div className="container mx-auto px-6 py-8">
+                        <div className=" mx-auto  py-8">
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 {/* Logo & Description */}
                                 <div>

@@ -1,11 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+
 import { 
-  BarChart3, 
-  Calendar, 
   CreditCard, 
   DollarSign, 
-  Download, 
   FileText, 
   HelpCircle, 
   Home, 
@@ -14,7 +10,6 @@ import {
   Settings, 
   ShoppingCart, 
   User, 
-  Users,
   Bell,
   Search,
   ChevronDown,
@@ -27,9 +22,7 @@ import { Input } from "../../ui/input";
 import { Badge } from "../../ui/badge";
 
 const UserDashboard = () => {
-  const [activePage, setActivePage] = useState("dashboard");
 
-  // Sample data for the dashboard
   const stats = [
     { title: "Total Orders", value: "248", icon: ShoppingCart, trend: "+12%", description: "From last week" },
     { title: "Total Spent", value: "$4,892", icon: DollarSign, trend: "+8%", description: "From last week" },

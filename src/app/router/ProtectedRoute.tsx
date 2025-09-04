@@ -1,26 +1,30 @@
+
 import { userCurrentUser } from "@/redux/fetures/auth/authSlice";
 import { useAppSelector } from "@/redux/fetures/hooks";
+import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
 interface ProtectedRouteProps {
-    allowedRoles?: string[]; // multiple roles allowed
+  allowedRoles?: string[];
+  children: ReactNode;
 }
 
-const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
-    const user = useAppSelector(userCurrentUser) as any
-    const role = user?.userInfo?.role
+const ProtectedRoute = ({ allowedRoles, children }: ProtectedRouteProps) => {
+  const user = useAppSelector(userCurrentUser) as any;
+  const role = user?.userInfo?.role;
 
-    // Not logged in → redirect
-    if (!role) {
-        return <Navigate to="/login" replace />;
-    }
+  // Not logged in → redirect to login
+  if (!role) {
+    return <Navigate to="/login" replace />;
+  }
 
-    // If route requires roles but user doesn’t match
-    if (allowedRoles && !allowedRoles.includes(role || "")) {
-        return <Navigate to="/login" replace />;
-    }
+  // Role mismatch → redirect to unauthorized page
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    return <Navigate to="/login" replace />;
+  }
 
-return allowedRoles
+  // All good → render children
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

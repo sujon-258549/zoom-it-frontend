@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BiSolidCategory } from "react-icons/bi";
 // Components
@@ -64,7 +63,7 @@ const CreateCategory: React.FC = () => {
 
 
   // Hooks
-  const navigate = useNavigate();
+
   const [createCategory, { isLoading: isCreating }] = useCreateCategoryMutation();
   const { data: categories, isLoading: isLoadingCategories } = useGetAllCategoryQuery('');
 
@@ -119,8 +118,11 @@ const CreateCategory: React.FC = () => {
         image: imageUrl
       }).unwrap();
 
+      if (result.success) {
+
+        toast.success("Category created successfully!", { id: toastId });
+      }
       // Success handling
-      toast.success("Category created successfully!", { id: toastId });
 
       // Reset form and close dialog
       form.reset();
@@ -128,8 +130,7 @@ const CreateCategory: React.FC = () => {
       setCurrentFile(undefined);
       setIsDialogOpen(false);
 
-      // Navigate or refresh data as needed
-      navigate("/dashboard/categories", { replace: true });
+
 
     } catch (error: any) {
       // Error handling
@@ -191,7 +192,7 @@ const CreateCategory: React.FC = () => {
                       message: "Category name must be at least 2 characters"
                     }
                   }}
-                  render={({ field, fieldState }) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category Name *</FormLabel>
                       <FormControl>
@@ -216,7 +217,7 @@ const CreateCategory: React.FC = () => {
                       message: "Slug can only contain lowercase letters, numbers, and hyphens"
                     }
                   }}
-                  render={({ field, fieldState }) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormLabel>Slug *</FormLabel>
                       <FormControl>

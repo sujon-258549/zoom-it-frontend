@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Minus, Plus, Trash2, ArrowRight, ShoppingBag, MoveRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,7 @@ const Shipping = () => {
     0
   );
   const subtotal = products.reduce(
-    (total, item) => total + (Number(item.price) * Number(item.orderQuantity)),
+    (total: number, item: { price: any; orderQuantity: any; }) => total + (Number(item.price) * Number(item.orderQuantity)),
     0
   );
 
@@ -65,7 +65,7 @@ const Shipping = () => {
 
     // Prepare order payload
     const orderPayload = {
-      product: products.map((product) => ({
+      product: products.map((product: TProduct) => ({
         id: product._id,
         orderQuantity: product.orderQuantity,
       })),

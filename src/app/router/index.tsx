@@ -12,6 +12,9 @@ import MainSidebar from "@/components/sidebar/MainSidebar";
 import ProductCreate from "@/components/sidebar/ProductCreate";
 import Profile from "@/components/sidebar/Profile";
 import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import AllUser from "@/components/sidebar/AllUser";
+import AllProductTable from "@/components/sidebar/AllProductTable";
 
 
 export const router = createBrowserRouter([
@@ -42,7 +45,7 @@ export const router = createBrowserRouter([
     {
         path: '/login',
         element: <LoginForm
-         />
+        />
     },
     {
         path: '/signup',
@@ -54,19 +57,27 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "/dashboard",
-                element: <Dashboard />
+                element: <ProtectedRoute allowedRoles={['admin', "user"]}><Dashboard /></ProtectedRoute>
             },
             {
                 path: "/dashboard/create-category",
-                element: <CreateCategory />
+                element: <ProtectedRoute allowedRoles={['admin']}><CreateCategory /></ProtectedRoute>
             },
             {
                 path: "/dashboard/create-product",
-                element: <ProductCreate />
+                element: <ProtectedRoute allowedRoles={['admin']}> <ProductCreate /></ProtectedRoute>
             },
             {
                 path: "/dashboard/profile",
-                element: <Profile />
+                element: <ProtectedRoute allowedRoles={['admin', "user"]}> <Profile /></ProtectedRoute>
+            },
+            {
+                path: "/dashboard/all-user",
+                element: <ProtectedRoute allowedRoles={['admin', "user"]}> <AllUser /></ProtectedRoute>
+            },
+            {
+                path: "/dashboard/all-product-table",
+                element: <ProtectedRoute allowedRoles={['admin']}> <AllProductTable /></ProtectedRoute>
             }
         ]
 

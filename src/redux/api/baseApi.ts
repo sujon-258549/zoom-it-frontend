@@ -7,7 +7,7 @@ import type { RootState } from "../fetures/store"; // Adjust the import path as 
 // import { setUser } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:4000/api",
+    baseUrl: "https://backend-nu-cyan.vercel.app/api",
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth?.token;
         console.log(token)
@@ -22,7 +22,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseApi = createApi({
     reducerPath: "baseApi",
-    tagTypes: ["product", "recommended", "contact", "user"],
+    tagTypes: ["product"],
     baseQuery: baseQuery,
     endpoints: () => ({}),
 });

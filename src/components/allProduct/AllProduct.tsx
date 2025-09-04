@@ -70,7 +70,7 @@ const AllProduct = () => {
   if (isLoading) return <LoadingPage />;
 
   return (
-    <div className="py-12 px-4 sm:px-6 lg:px-8">
+    <div className="py-12 px-4  max-w-6xl mx-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -129,7 +129,7 @@ const AllProduct = () => {
             <p className="text-xl text-gray-500">No products found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2">
             {products.map((product) => {
               const currentIndex = currentPhotoIndexes[product._id] || 0;
               const currentPhoto = product.photos?.[currentIndex] || "";
