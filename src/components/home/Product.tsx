@@ -162,13 +162,13 @@ const ProductManagementCards = () => {
                       <span className="text-2xl font-bold text-cyan-700">
                         ${((product.discount || 0)).toFixed(2)}
                       </span>
-                     
-                        <>
-                          <span className="text-gray-400 line-through">
-                            ${product.price.toFixed(2)}
-                          </span>
-                        </>
-                
+
+                      <>
+                        <span className="text-gray-400 line-through">
+                          ${product.price.toFixed(2)}
+                        </span>
+                      </>
+
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -188,9 +188,29 @@ const ProductManagementCards = () => {
                       )}
                     </div>
 
-                    <Link to={`/product/${product._id}`}> <Button className="w-full text-white cursor-pointer">
-                      🛒 Add to Cart
-                    </Button></Link>
+                    <Link to={`/product/${product._id}`}>
+                      <Button
+                        disabled={!product.stockStatus} // stockStatus === false হলে disable হবে
+                        className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          className="mr-2"
+                        >
+                          <path
+                            d="M3 3h2l.4 2M7 13h10l3-8H6.4"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        {product.stockStatus === true ? "Add to cart" : "Out Of Stock"}
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               );

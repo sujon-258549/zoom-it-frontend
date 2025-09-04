@@ -54,7 +54,7 @@ const AdminDashboard = () => {
             <CardTitle>Total Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">540</p>
+            <p className="text-2xl font-bold">{adminData?.totalQuantity}</p>
             <p className="text-sm text-gray-500">+30 today</p>
           </CardContent>
         </Card>
@@ -84,22 +84,6 @@ const AdminDashboard = () => {
               <Bar dataKey="sales" fill="#155E75" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
-
-      {/* Recent Activity */}
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>🕒 Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-3 text-gray-600">
-            <li>✅ New product <b>iPhone 16 Pro</b> added</li>
-            <li>🛒 Order #1234 completed</li>
-            <li>👤 New user registered: <b>Kieran Cobb</b></li>
-            <li>📦 Stock updated for <b>MacBook Pro</b></li>
-          </ul>
-          <Button className="mt-4">View All</Button>
         </CardContent>
       </Card>
     </div>

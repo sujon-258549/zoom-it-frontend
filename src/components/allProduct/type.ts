@@ -17,10 +17,12 @@ export type TProduct = {
   discount?: number;
   status: string;
   stockStatus: boolean;
+  orderQuantity: number,
   photos: string[];
   categories: TCategory[];
   createdAt: string;
   updatedAt: string;
+
 };
 
 

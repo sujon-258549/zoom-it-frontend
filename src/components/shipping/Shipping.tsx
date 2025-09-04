@@ -1,64 +1,102 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Minus, Plus, Trash2, Heart, ArrowRight, ShoppingBag, Tag } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Minus, Plus, Trash2, ArrowRight, ShoppingBag, MoveRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useAppDispatch, useAppSelector } from "@/redux/fetures/hooks";
+import { clearCart, decrementProductQuantity, deliveryAmount, deliveryAmountValue, incrementProductQuantity, orderSelector } from "@/redux/fetures/card/shippingSlice";
+import type { TProduct } from "../allProduct/type";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { districts } from "./district";
+import { toast } from "sonner";
+import { useCreateOrderMutation } from "@/redux/fetures/auth/authApi";
+import { userCurrentUser } from "@/redux/fetures/auth/authSlice";
 
 const Shipping = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "PC system All in One APPLE iMac (2023) mqrq3ro/a, Apple M3, 24\" Retina 4.5K, 8GB, SSD 256GB, 10-core GPU, Keyboard layout INT",
-      price: 1499,
-      quantity: 2,
-      image: "https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg",
-      imageDark: "https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
-    },
-    {
-      id: 2,
-      name: "APPLE iPhone 15 5G phone, 256GB, Gold",
-      price: 999,
-      quantity: 3,
-      image: "https://flowbite.s3.amazonaws.com/blocks/e-commerce/iphone-light.svg",
-      imageDark: "https://flowbite.s3.amazonaws.com/blocks/e-commerce/iphone-dark.svg"
+
+  const dispatch = useAppDispatch()
+  const products = useAppSelector(orderSelector)
+  const [district, setDistrict] = useState('')
+  dispatch(deliveryAmount(district))
+  const [address, setAddress] = useState("");
+  const incrementQuantity = (product: TProduct) => {
+    dispatch(incrementProductQuantity(product))
+  };
+  const decrementQuantity = (product: TProduct) => {
+    dispatch(decrementProductQuantity(product))
+  };
+  const user = useAppSelector(userCurrentUser) as any
+  const role = user?.userInfo?.role
+  const removeItem = (product: TProduct) => {
+    dispatch(clearCart(product))
+  };
+
+  // Total Price
+
+  const discountPrice = products.reduce(
+    (total, item) => total + (Number(item.discount) * Number(item.orderQuantity)),
+    0
+  );
+  const subtotal = products.reduce(
+    (total, item) => total + (Number(item.price) * Number(item.orderQuantity)),
+    0
+  );
+
+  const [createOrder] = useCreateOrderMutation()
+
+  const deliveryCost = useAppSelector(deliveryAmountValue)
+  const savings = (subtotal - discountPrice).toFixed()
+  const totalPrice = (subtotal - Number(savings) + deliveryCost)
+
+  const handleOrder = async () => {
+    // Show loading toast
+    if (!role) {
+      return toast.error("Please login");
     }
-  ]);
+    const toastId = toast.loading("Processing order...", { duration: 2000 });
 
-  const [voucherCode, setVoucherCode] = useState("");
+    // Validate required fields
+    if (!address || !district) {
+      toast.error("Please add both address and district", { id: toastId });
+      return;
+    }
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
+    // Prepare order payload
+    const orderPayload = {
+      product: products.map((product) => ({
+        id: product._id,
+        orderQuantity: product.orderQuantity,
+      })),
+      address: {
+        address,
+        district,
+      },
+      totalAmount: totalPrice,
+    };
 
-    setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    try {
+      const res = await createOrder(orderPayload);
+
+      if (res?.data?.success) {
+        toast.success(res.data.message || "Order placed successfully", {
+          id: toastId,
+          duration: 2000,
+        });
+      } else {
+        toast.error(res?.data?.message || "Failed to place order", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      console.error("Order Error:", error);
+      toast.error("Something went wrong. Please try again.", { id: toastId });
+    }
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
 
-  const addToWishlist = (id: number) => {
-    // Add to wishlist logic here
-    console.log(`Added item ${id} to wishlist`);
-  };
-
-  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const savings = 299;
-  const storePickup = 99;
-  const tax = subtotal * 0.08; // 8% tax
-  const total = subtotal - savings + storePickup + tax;
-
-  const applyVoucher = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Voucher application logic here
-    console.log("Applying voucher:", voucherCode);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 dark:bg-gray-900">
@@ -67,11 +105,11 @@ const Shipping = () => {
           <ShoppingBag className="h-8 w-8 text-cyan-600 mr-3 dark:text-cyan-400" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Shopping Cart</h1>
           <Badge variant="outline" className="ml-4 bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-100 dark:border-cyan-700">
-            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'}
+            {products.length} {products.length === 1 ? 'item' : 'items'}
           </Badge>
         </div>
 
-        {cartItems.length === 0 ? (
+        {products.length === 0 ? (
           <Card className="text-center py-16">
             <CardContent>
               <ShoppingBag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -88,19 +126,19 @@ const Shipping = () => {
             {/* Cart Items */}
             <div className="lg:flex-1">
               <div className="space-y-2">
-                {cartItems.map((item) => (
-                  <Card key={item.id} className="overflow-hidden border border-gray-200 dark:border-gray-700 -py-6">
+                {products?.map((item: TProduct) => (
+                  <Card key={item._id} className="overflow-hidden border border-gray-200 dark:border-gray-700 -py-6">
                     <CardContent className="">
                       <div className="flex flex-col md:flex-row md:items-center gap-6">
                         {/* Product Image */}
                         <div className="flex-shrink-0">
                           <img
-                            src={item.image}
+                            src={item.photos[0]}
                             alt={item.name}
                             className="h-16 w-16 rounded-lg object-contain border border-gray-200 dark:border-gray-700 dark:hidden"
                           />
                           <img
-                            src={item.imageDark}
+                            src={item.photos[0]}
                             alt={item.name}
                             className="h-28 w-28 rounded-lg object-contain border border-gray-200 dark:border-gray-700 hidden dark:block"
                           />
@@ -120,13 +158,13 @@ const Shipping = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="text-white"
-                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                  onClick={() => decrementQuantity(item)}
                                 >
                                   <Minus className="h-4 w-4  text-cyan-800" />
                                 </Button>
                                 <Input
                                   type="text"
-                                  value={item.quantity}
+                                  value={item?.orderQuantity}
                                   readOnly
                                   className="h-8 w-12 text-center border-0 rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 />
@@ -134,7 +172,8 @@ const Shipping = () => {
                                   variant="ghost"
                                   size="icon"
                                   className="text-white"
-                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                  onClick={() => incrementQuantity(item)}
+
                                 >
                                   <Plus className="h-4 w-4 text-cyan-800" />
                                 </Button>
@@ -143,30 +182,22 @@ const Shipping = () => {
 
                             <div className="text-right">
                               <p className="text-lg font-bold text-gray-900 dark:text-white">
-                                ${(item.price * item.quantity).toLocaleString()}
+                                {/* ${(item.price * item.quantity).toLocaleString()} */}
                               </p>
                               <p className="text-sm text-gray-500 dark:text-gray-400">
-                                ${item.price} each
+                                {Number(item.discount) * item.orderQuantity} each
                               </p>
                             </div>
                           </div>
 
                           {/* Action Buttons */}
-                          <div className="flex items-center gap-4 mt-4">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-gray-500 hover:text-cyan-600 dark:text-gray-400 dark:hover:text-cyan-400"
-                              onClick={() => addToWishlist(item.id)}
-                            >
-                              <Heart className="h-4 w-4 mr-1" />
-                              Save for later
-                            </Button>
+                          <div className="flex items-center gap-4 mt-1 mb-3">
+                            <Badge className="text-white">Remove This Cart <MoveRight /></Badge>
                             <Button
                               variant="ghost"
                               size="sm"
                               className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeItem(item)}
                             >
                               <Trash2 className="h-4 w-4 mr-1" />
                               Remove
@@ -174,6 +205,7 @@ const Shipping = () => {
                           </div>
                         </div>
                       </div>
+
                     </CardContent>
                   </Card>
                 ))}
@@ -190,38 +222,71 @@ const Shipping = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
-                      <span className="font-medium text-gray-900 dark:text-white">${subtotal.toLocaleString()}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{subtotal} Take</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Savings</span>
-                      <span className="font-medium text-green-600">-${savings.toLocaleString()}</span>
+                      <span className="font-medium text-green-600">  {savings} Take</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Store Pickup</span>
-                      <span className="font-medium text-gray-900 dark:text-white">${storePickup.toLocaleString()}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Delivery  Cost
+                      </span>
+                      <span className="font-medium text-gray-900 dark:text-white">{deliveryCost} Take</span>
                     </div>
 
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Tax</span>
-                      <span className="font-medium text-gray-900 dark:text-white">${tax.toFixed(2)}</span>
-                    </div>
 
+                    <div className="p-6 bg-gray-50  flex flex-col ">
+                      <p className="text-lg font-medium mb-2 text-cyan-900">Select District</p>
+
+                      <Select onValueChange={setDistrict}>
+                        <SelectTrigger className="w-full border border-cyan-900 rounded-md bg-cyan-50 hover:bg-cyan-100 focus:ring-2 focus:ring-cyan-400">
+                          <SelectValue placeholder="Select District" />
+                        </SelectTrigger>
+
+                        <SelectContent className="bg-cyan-50 border border-cyan-400 rounded-md">
+                          {districts.map((d) => (
+                            <SelectItem
+                              key={d}
+                              value={d}
+                              className="hover:bg-cyan-200 focus:bg-cyan-300"
+                            >
+                              {d}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {district && (
+                        <p className="mt-4 text-cyan-800 font-semibold">
+                          Selected: {district}
+                        </p>
+                      )}
+
+                      <p className="mt-4">Inter your Address</p>
+                      <Input
+                        type="email"
+                        placeholder="Enter your address"                  // input value bind
+                        onChange={(e) => setAddress(e.target.value)}  // update state on change
+                        className="border mt-4 border-cyan-800 rounded-md p-2"
+                      />
+                      <p>Typed Email: {address}</p>
+                    </div>
                     <Separator className="my-4" />
 
                     <div className="flex justify-between text-lg font-bold">
                       <span className="text-gray-900 dark:text-white">Total</span>
-                      <span className="text-cyan-700 dark:text-cyan-400">${total.toLocaleString()}</span>
+                      <span className="text-cyan-700 dark:text-cyan-400">{totalPrice.toFixed()} Take</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex-col space-y-4">
-                  <Button className="w-full text-white">
+                  <Button onClick={handleOrder} className="w-full cursor-pointer text-white">
                     Proceed to Checkout
                   </Button>
 
-                  <div className="text-center">
+                  {/* <div className="text-center">
                     <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">or</span>
                     <Link
                       to="/products"
@@ -229,7 +294,7 @@ const Shipping = () => {
                     >
                       Continue Shopping
                     </Link>
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
 

@@ -4,37 +4,38 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { useGetAllProductQuery, useGetSingleProductQuery } from "@/redux/fetures/auth/authApi";
-import { Input } from "../ui/input";
 import LoadingPage from "../common/loding/LoadingPage";
 import RelevantProduct from "./RelevantProduct";
+import type { TProduct } from "./type";
+import { useAppDispatch } from "@/redux/fetures/hooks";
+import { addProduct } from "@/redux/fetures/card/shippingSlice";
+import { toast } from "sonner";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const { data: product, isLoading, error } = useGetSingleProductQuery(id);
-  const [quantity, setQuantity] = useState()
   const [selected, setSelected] = useState(0);
   const { data: products } = useGetAllProductQuery('')
-
+console.log(product)
+  // redux work slice
+  const dispatch = useAppDispatch()
+  const handelAddToCart = (product: TProduct) => {
+    dispatch(addProduct(product))
+    return toast.success("Product Add to Cart Successfully", { duration: 2000 })
+  }
   console.log(products?.data)
   console.log("product", product?.data.categories[0].name)
-  // @ts-expect-error
-  const allCategories = products.data
+  const allCategories = products?.data
     .flatMap((p: any) => p.categories.map((c: any) => c.name))
     .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i);
 
   console.log(allCategories)
   // ✅ Step 2: Filter products by selected category
-  // @ts-expect-error
-  const filteredProducts = products.data.filter((p: any) =>
+  const filteredProducts = products?.data?.filter((p: any) =>
     p.categories.some((c: any) => c.name === product?.data.categories[0].name)
   )
 
-  console.log(filteredProducts)
 
-
-  const handleQuantity = (e: any) => {
-    setQuantity(e.target.value);
-  };
 
   if (isLoading) return <LoadingPage />;
   if (error) return <p className="text-center mt-10 text-red-500">Failed to load product</p>;
@@ -46,6 +47,10 @@ export default function ProductDetails() {
   const thumbs: string[] = p.photos?.length ? p.photos : [
     "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
   ];
+
+
+
+  // ad to cart
 
   return (
     <div className="min-h-screen text-gray-200 p-6">
@@ -113,12 +118,12 @@ export default function ProductDetails() {
                   ) : null}
                 </div>
 
-                <div className="mt-4 flex items-center gap-3 w-[240px]">
-                  <label className="text-sm">Quantity</label>
-                  <Input style={{ boxShadow: '1px 1px 10px' }} name="quantity" className="border shadow-2xl border-cyan-800" onChange={handleQuantity} type="number" placeholder="Enter your quantity" />
-                </div>
 
-                <Button className="w-full mt-5 text-white">
+                <Button
+                  onClick={() => handelAddToCart(product.data)}
+                  disabled={product.stockStatus} // stockStatus === false হলে disable হবে
+                  className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <svg
                     width="16"
                     height="16"
@@ -134,8 +139,9 @@ export default function ProductDetails() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  Add to cart
+                 {product.stockStatus !== true ? "Add to cart" : "Out Of Stock"}
                 </Button>
+
 
                 <p className="text-sm mt-4 text-[#111415]">{p.description}</p>
 

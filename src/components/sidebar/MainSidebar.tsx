@@ -5,10 +5,13 @@ import { Button } from "../ui/button";
 import { useGetMeQuery } from "@/redux/fetures/auth/authApi";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FaHome } from "react-icons/fa";
+import { useAppSelector } from "@/redux/fetures/hooks";
+import { userCurrentUser } from "@/redux/fetures/auth/authSlice";
 
 const MainSidebar = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+    const user = useAppSelector(userCurrentUser) as any
+    const role = user?.userInfo?.role
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
@@ -21,19 +24,24 @@ const MainSidebar = () => {
         {
             icon: <FiHome className="w-5 h-5" />,
             label: "Dashboard",
-            href: "/dashboard"
+            href: "/dashboard",
         },
-        {
-            icon: <FiBook className="w-5 h-5" />,
-            label: "Create Category",
-            href: "/dashboard/create-category"
-        },
-        {
-            icon: <FiFileText className="w-5 h-5" />,
-            label: "Create product",
-            href: "/dashboard/create-product"
-        },
+        ...(role === "admin"
+            ? [
+                {
+                    icon: <FiBook className="w-5 h-5" />,
+                    label: "Create Category",
+                    href: "/dashboard/create-category",
+                },
+                {
+                    icon: <FiFileText className="w-5 h-5" />,
+                    label: "Create Product",
+                    href: "/dashboard/create-product",
+                },
+            ]
+            : []),
     ];
+
 
     const { data: meData } = useGetMeQuery("");
     return (
@@ -74,7 +82,7 @@ const MainSidebar = () => {
                         className="text-white flex gap-2 items-center dark:text-cyan-100 font-bold text-lg uppercase tracking-wide"
                     >
 
-                        <FaHome  className="text-3xl"/>  Navigation Menu
+                        <FaHome className="text-3xl" />  Navigation Menu
                     </h5></Link>
                     <button
                         type="button"
@@ -104,7 +112,7 @@ const MainSidebar = () => {
                         ))}
                     </ul>
 
-                    
+
                 </div>
                 <div className="absolute bottom-4 left-4 text-cyan-600 dark:text-cyan-400 text-xs">
                     <div className="flex items-center gap-3">

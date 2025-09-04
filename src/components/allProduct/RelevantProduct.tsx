@@ -6,7 +6,7 @@ import type { TProduct } from "../sidebar/ProductCreate";
 
 import { Link } from "react-router-dom";
 
-const RelevantProduct = ({product}:{product: TProduct[]}) => {
+const RelevantProduct = ({ product }: { product: TProduct[] }) => {
   const products: TProduct[] = product || [];
 
   // State to track current photo index for each product
@@ -183,9 +183,29 @@ const RelevantProduct = ({product}:{product: TProduct[]}) => {
                       )}
                     </div>
 
-                    <Link to={`/product/${product._id}`}> <Button className="w-full text-white cursor-pointer">
-                      🛒 Add to Cart
-                    </Button></Link>
+                    <Link to={`/product/${product._id}`}>
+                      <Button
+                        disabled={!product.stockStatus} // stockStatus === false হলে disable হবে
+                        className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          className="mr-2"
+                        >
+                          <path
+                            d="M3 3h2l.4 2M7 13h10l3-8H6.4"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        {product.stockStatus === true ? "Add to cart" : "Out Of Stock"}
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               );

@@ -179,9 +179,8 @@ const AllProduct = () => {
                             {product.photos.map((_, index) => (
                               <div
                                 key={index}
-                                className={`w-2 h-2 rounded-full ${
-                                  index === currentIndex ? "bg-white" : "bg-white/50"
-                                }`}
+                                className={`w-2 h-2 rounded-full ${index === currentIndex ? "bg-white" : "bg-white/50"
+                                  }`}
                               />
                             ))}
                           </div>
@@ -206,9 +205,8 @@ const AllProduct = () => {
 
                     {/* Product status */}
                     <div
-                      className={`absolute top-4 left-4 text-white font-semibold py-1 px-3 rounded-full text-sm shadow-md ${
-                        product.status === "active" ? "bg-green-500" : "bg-gray-500"
-                      }`}
+                      className={`absolute top-4 left-4 text-white font-semibold py-1 px-3 rounded-full text-sm shadow-md ${product.status === "active" ? "bg-green-500" : "bg-gray-500"
+                        }`}
                     >
                       {product.status.toUpperCase()}
                     </div>
@@ -248,7 +246,27 @@ const AllProduct = () => {
                     </div>
 
                     <Link to={`/product/${product._id}`}>
-                      <Button className="w-full cursor-pointer text-white">🛒 Add to Cart</Button>
+                      <Button
+                        disabled={!product.stockStatus} // stockStatus === false হলে disable হবে
+                        className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          className="mr-2"
+                        >
+                          <path
+                            d="M3 3h2l.4 2M7 13h10l3-8H6.4"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        {product.stockStatus === true ? "Add to cart" : "Out Of Stock"}
+                      </Button>
                     </Link>
                   </div>
                 </div>

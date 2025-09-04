@@ -112,6 +112,16 @@ const authApi = baseApi.injectEndpoints({
             },
         }),
 
+        // order
+
+        createOrder: builder.mutation({
+            query: (userInfo) => ({
+                url: "/order",
+                method: "POST",
+                body: userInfo,
+            }),
+        }),
+
 
 
         // dashboard
@@ -138,5 +148,6 @@ export const {
     useCreateProductMutation,
     useGetAllProductQuery,
     useGetSingleProductQuery,
-    useAdminDashboardQuery
+    useAdminDashboardQuery,
+    useCreateOrderMutation
 } = authApi;
