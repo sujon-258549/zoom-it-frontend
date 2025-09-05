@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
             sessionStorage.setItem("accessToken", res.data.token);
 
             toast.success("Login successful!", { id: toastId });
-            navigate("/dashboard", { replace: true });
+            navigate("/", { replace: true });
         } catch (error: any) {
             console.error("Login failed:", error);
             toast.error(error?.data?.message || error.message || "Login failed. Please try again.", { id: toastId });
