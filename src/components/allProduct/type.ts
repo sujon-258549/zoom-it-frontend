@@ -35,3 +35,39 @@ export type TProductResponse = {
     totalPage: number
   };
 };
+
+interface OrderItem {
+  id: TProduct;
+  orderQuantity: number;
+  _id: string;
+}
+export interface TOrder {
+  _id: string;
+  orderId: {
+    _id: string;
+    name: string;
+    email: string;
+    profileImage: string;
+  };
+  product: OrderItem[];
+  address: {
+    address: string;
+    district: string;
+    _id: string;
+  };
+  totalAmount: number;
+  deliveryStatus: boolean;
+  paymentStatus: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type TOrderResponse = {
+  data: TOrder[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPage: number
+  };
+};

@@ -1,4 +1,4 @@
-import type { TProductResponse } from "@/components/allProduct/type";
+import type { TOrderResponse, TProductResponse } from "@/components/allProduct/type";
 import { baseApi } from "@/redux/api/baseApi";
 
 
@@ -122,7 +122,35 @@ const authApi = baseApi.injectEndpoints({
                 body: userInfo,
             }),
         }),
-
+        getMyOrder: builder.query({
+            // query: () => ({
+            //     url: "/products",
+            //     method: "GET",
+            // }),
+            // transformResponse: (response: any) => {
+            //     return response;
+            // },
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    args.forEach((element: { name: string; value: string }) => {
+                        params.append(element.name, element.value);
+                    });
+                }
+                return {
+                    url: "/order/my-order",
+                    method: "GET",
+                    params: params,
+                };
+            },
+            transformResponse: (response: TOrderResponse) => {
+                return {
+                    data: response.data,
+                    meta: response.meta,
+                };
+            },
+            providesTags: ["product"],
+        }),
 
 
         // dashboard
@@ -150,5 +178,6 @@ export const {
     useGetSingleProductQuery,
     useAdminDashboardQuery,
     useCreateOrderMutation,
+    useGetMyOrderQuery,
     useAllUserQuery
 } = authApi;
