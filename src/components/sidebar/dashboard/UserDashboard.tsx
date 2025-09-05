@@ -2,7 +2,6 @@ import {
   ShoppingCart, 
   DollarSign, 
   Package, 
-  MapPin,
   Calendar,
   CreditCard,
   Truck,
@@ -14,32 +13,7 @@ import { Badge } from "../../ui/badge";
 import { useGetMyOrderQuery } from "@/redux/fetures/auth/authApi";
 import LoadingPage from "@/components/common/loding/LoadingPage";
 
-interface OrderItem {
-  product: {
-    _id: string;
-    name: string;
-    price: number;
-  };
-  orderQuantity: number;
-}
 
-interface Order {
-  _id: string;
-  orderId: string;
-  totalAmount: number;
-  deliveryStatus: boolean;
-  paymentStatus: boolean;
-  createdAt: string;
-  updatedAt: string;
-  address: {
-    street?: string;
-    city?: string;
-    state?: string;
-    zipCode?: string;
-    country?: string;
-  };
-  product: OrderItem[];
-}
 
 const UserDashboard = () => {
   const { data: ordersData, isLoading } = useGetMyOrderQuery('');
