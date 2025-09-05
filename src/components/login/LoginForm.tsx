@@ -42,6 +42,8 @@ const LoginForm: React.FC = () => {
         try {
             const res = await userLogin({ email: data.email, password: data.password }).unwrap();
 
+               sessionStorage.setItem("login", "true");
+
             if (!res.data?.token) throw new Error("Login failed. No access token received.");
 
             const userInfo = verifyToken(res.data.token);
@@ -51,6 +53,7 @@ const LoginForm: React.FC = () => {
             sessionStorage.setItem("accessToken", res.data.token);
 
             toast.success("Login successful!", { id: toastId });
+         
             navigate("/", { replace: true });
         } catch (error: any) {
             console.error("Login failed:", error);

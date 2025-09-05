@@ -6,7 +6,7 @@ import { useAppSelector } from '@/redux/fetures/hooks'
 import { userCurrentUser } from '@/redux/fetures/auth/authSlice'
 import DropdownMenu from '../navbarAndFooter/Dropdown'
 import MotionButton from '../MotionButton'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { orderSelector } from '@/redux/fetures/card/shippingSlice'
 
 const navigationLinks = [
@@ -15,6 +15,14 @@ const navigationLinks = [
 ]
 
 export default function Navbar() {
+    useEffect(() => {
+
+        const session = sessionStorage.getItem("login");
+        if (session === "true") {
+            sessionStorage.removeItem("login");
+            window.location.reload();
+        }
+    }, []);
     const user = useAppSelector(userCurrentUser)
     //   @ts-expect-error
     const email = user?.userInfo?.email
