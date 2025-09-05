@@ -5,11 +5,11 @@ import { useGetAllProductQuery } from "@/redux/fetures/auth/authApi";
 import LoadingPage from "../common/loding/LoadingPage";
 import { AlignLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import AddToCart from "../ui/AddTocart";
 
 const ProductManagementCards = () => {
   const { data: product, isLoading } = useGetAllProductQuery('');
   const products = product?.data || [];
-
   // State to track current photo index for each product
   const [currentPhotoIndexes, setCurrentPhotoIndexes] = useState<Record<string, number>>({});
 
@@ -187,29 +187,36 @@ const ProductManagementCards = () => {
                       )}
                     </div>
 
-                    <Link to={`/product/${product._id}`}>
-                      <Button
-                        disabled={!product.stockStatus} // stockStatus === false হলে disable হবে
-                        className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          className="mr-2"
+                    <div className="flex gap-2 justify-between items-center mt-5">
+                      <Link to={`/product/${product._id}`} className="w-full">
+                        <Button
+                          className="w-full cursor-pointer text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <path
-                            d="M3 3h2l.4 2M7 13h10l3-8H6.4"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        {product.stockStatus === true ? "Add to cart" : "Out Of Stock"}
-                      </Button>
-                    </Link>
+                          <svg
+                            width="16"
+                            height="16"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            className="mr-2"
+                          >
+                            <path
+                              d="M3 3h2l.4 2M7 13h10l3-8H6.4"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          Details
+                        </Button>
+                      </Link>
+
+                      {/* AddToCart button */}
+                      <AddToCart product={product}
+    
+                      />
+                    </div>
+
                   </div>
                 </div>
               );

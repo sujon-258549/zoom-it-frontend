@@ -5,6 +5,7 @@ import type { TProduct } from "../sidebar/ProductCreate";
 
 
 import { Link } from "react-router-dom";
+import AddToCart from "../ui/AddTocart";
 
 const RelevantProduct = ({ product }: { product: TProduct[] }) => {
   const products: TProduct[] = product || [];
@@ -66,7 +67,7 @@ const RelevantProduct = ({ product }: { product: TProduct[] }) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.slice(0, 8).map((product) => {
+            {products.slice(0, 8).map((product : TProduct) => {
               const currentIndex = currentPhotoIndexes[product._id] || 0;
               const currentPhoto = product.photos?.[currentIndex] || "";
 
@@ -183,29 +184,34 @@ const RelevantProduct = ({ product }: { product: TProduct[] }) => {
                       )}
                     </div>
 
-                    <Link to={`/product/${product._id}`}>
-                      <Button
-                        disabled={!product.stockStatus} // stockStatus === false হলে disable হবে
-                        className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <svg
-                          width="16"
-                          height="16"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          className="mr-2"
+                    <div className="flex gap-2 justify-between items-center mt-5">
+                      <Link to={`/product/${product._id}`} className="w-full">
+                        <Button
+                          className="w-full cursor-pointer text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <path
-                            d="M3 3h2l.4 2M7 13h10l3-8H6.4"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        {product.stockStatus === true ? "Add to cart" : "Out Of Stock"}
-                      </Button>
-                    </Link>
+                          <svg
+                            width="16"
+                            height="16"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            className="mr-2"
+                          >
+                            <path
+                              d="M3 3h2l.4 2M7 13h10l3-8H6.4"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          Details
+                        </Button>
+                      </Link>
+                      {/* @ts-expected-error-product */}
+                      <AddToCart product={product}
+
+                      />
+                    </div>
                   </div>
                 </div>
               );

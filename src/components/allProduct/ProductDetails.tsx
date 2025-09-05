@@ -16,20 +16,15 @@ export default function ProductDetails() {
   const { data: product, isLoading, error } = useGetSingleProductQuery(id);
   const [selected, setSelected] = useState(0);
   const { data: products } = useGetAllProductQuery('')
-console.log(product)
+  console.log(product?.data.price)
   // redux work slice
   const dispatch = useAppDispatch()
   const handelAddToCart = (product: TProduct) => {
     dispatch(addProduct(product))
     return toast.success("Product Add to Cart Successfully", { duration: 2000 })
   }
-  console.log(products?.data)
-  console.log("product", product?.data.categories[0].name)
-  const allCategories = products?.data
-    .flatMap((p: any) => p.categories.map((c: any) => c.name))
-    .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i);
 
-  console.log(allCategories)
+
   // ✅ Step 2: Filter products by selected category
   const filteredProducts = products?.data?.filter((p: any) =>
     p.categories.some((c: any) => c.name === product?.data.categories[0].name)
@@ -44,9 +39,7 @@ console.log(product)
   const p = product.data;
 
   // Use product photos if available, otherwise fallback to placeholder
-  const thumbs: string[] = p.photos?.length ? p.photos : [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
-  ];
+  const thumbs: string[] = p.photos?.length ? p.photos : p.photos[0];
 
 
 
@@ -110,10 +103,10 @@ console.log(product)
                 </div>
 
                 <div className="mt-4 text-2xl font-bold">
-                  ${p.price}
+                  ${p.discount.toFixed()}
                   {p.discount ? (
                     <span className="ml-2 text-sm text-gray-400 line-through">
-                      ${p.price + p.discount}
+                      ${p.price}
                     </span>
                   ) : null}
                 </div>
@@ -121,7 +114,7 @@ console.log(product)
 
                 <Button
                   onClick={() => handelAddToCart(product.data)}
-                  disabled={product.stockStatus} // stockStatus === false হলে disable হবে
+                  disabled={!product?.data?.stockStatus} // stockStatus === false হলে disable হবে
                   className="w-full cursor-pointer mt-5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -139,7 +132,7 @@ console.log(product)
                       strokeLinejoin="round"
                     />
                   </svg>
-                 {product.stockStatus !== true ? "Add to cart" : "Out Of Stock"}
+                  {product.stockStatus !== true ? "Add to cart" : "Out Of Stock"}
                 </Button>
 
 

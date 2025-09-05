@@ -185,7 +185,7 @@ const Shipping = () => {
                                 {/* ${(item.price * item.quantity).toLocaleString()} */}
                               </p>
                               <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {Number(item.discount) * item.orderQuantity} each
+                                {Number(item?.discount) * Number(item?.orderQuantity)} each
                               </p>
                             </div>
                           </div>
