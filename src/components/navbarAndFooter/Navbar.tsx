@@ -24,6 +24,7 @@ export default function Navbar() {
         }
     }, []);
     const user = useAppSelector(userCurrentUser)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //   @ts-expect-error
     const email = user?.userInfo?.email
     const productLength = useAppSelector(orderSelector)
@@ -133,5 +134,4 @@ export default function Navbar() {
     )
 }
 
-
-//  add code 
+// hello developer
